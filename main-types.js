@@ -16,4 +16,10 @@
 	};
 8. Any: 
 	any type
+
+9. Union types: 
+	string | number
+
+10. Literal types: 
+	'as-number' | 'as-text'
  */

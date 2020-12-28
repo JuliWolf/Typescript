@@ -1,38 +1,25 @@
-// const person: {
-// 	name: string;
-// 	age: number;
-// 	hobbies: string[];
-// 	role: [number, string];
-// } = {
-// 	name: "Julia",
-// 	age: 24,
-// 	hobbies: ["Sports", "Cooking"],
-// 	role: [2, 'author']
-// };
+function combine(input1: number | string, input2: number | string, resultConversion: 'as-number' | 'as-text') {
+	let result;
+	if (typeof input1 === 'number' && typeof input2 === 'number' || resultConversion === 'as-number') {
+		result = +input1 + +input2;
+	} else {
+		result = input1.toString() + input2.toString();
+	}
 
-// Wrong
-// person.role[0] = "admin";
-// Allowed 2 elements: first - number, second - string
+	return result;
 
-
-// const ADMIN = 0;
-// const READ_ONLY = 1;
-// const AUTHOR = 2;
-
-
-enum Role {
-	ADMIN = 5, READ_ONLY = 100, AUTHOR = 200
-};
-
-const person = {
-	name: "Julia",
-	age: 24,
-	hobbies: ["Sports", "Cooking"],
-	role: Role.ADMIN
-};
-
-if (person.role === Role.ADMIN) {
-	console.log('is admin');
+	// if (resultConversion === 'as-number') {
+	// 	return result + result;
+	// } else {
+	// 	return result.toString();
+	// }
 }
 
-console.log(person);
+const combinedAges = combine(30, 26, 'as-number');
+console.log(combinedAges);
+
+const combinedStringAges = combine('30', '26', 'as-number');
+console.log(combinedStringAges);
+
+const combinedNames = combine('Max', 'Anna', 'as-text');
+console.log(combinedNames);
