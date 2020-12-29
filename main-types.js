@@ -22,4 +22,19 @@
 
 10. Literal types: 
 	'as-number' | 'as-text'
+
+11. Type
+	type Combinable = number | string;
+	type ConversionDescriptor = 'as-number' | 'as-text';
+
+12. Function: Function
+
+13. Unknown: unknown
+	does not disable type checking as type any
+
+14. Never: never
+	function never returns anything
+
+15. Void: void
+	function returns underfined
  */
