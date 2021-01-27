@@ -21,20 +21,47 @@
 
 // user1.greet('Hi there, i\'am');
 
+interface Named {
+	readonly name?: string;
+	// Optional property
+	outputName?: string;
+}
 
-interface Greetable{
-	name: string;
+// Interfaces can be inherited from multiple interfaces
+interface Greetable extends Named{
+	// name: string;
 	greet(phrase: string): void;
 }
 
 class Person implements Greetable{
-	name: string;
+	name?: string;
 
-	constructor(n: string) {
-		this.name = n;
+	constructor(n?: string) {
+		if(n)
+			this.name = n;
 	}
 
 	greet(phrase: string) {
-		console.log(phrase + " " + this.name);
+		if (this.name) {
+			console.log(phrase + " " + this.name);
+		} else {
+			console.log("Hi");
+		}
+		
 	}
+}
+let user1: Greetable;
+user1 = new Person();
+
+// Two ways of defining functions
+
+// type AddFn = (a: number, b: number) => number;
+interface AddFn{
+	(n1: number, n2: number): number;
+}
+
+let add: AddFn;
+
+add = (n1: number, n2: number) => {
+	return n1 + n2;
 }
