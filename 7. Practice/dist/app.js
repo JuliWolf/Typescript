@@ -42,6 +42,16 @@ class ProjectState extends State {
     addProject(title, description, numOfPeople) {
         const newProject = new Project(Math.random().toString(), title, description, numOfPeople, ProjectStatus.Active);
         this.projects.push(newProject);
+        this.updateListeners();
+    }
+    moveProject(projectID, newStatus) {
+        const project = this.projects.find(prj => prj.id === projectID);
+        if (project && project.status !== newStatus) {
+            project.status = newStatus;
+            this.updateListeners();
+        }
+    }
+    updateListeners() {
         for (const listenerFn of this.listeners) {
             listenerFn(this.projects.slice());
         }
@@ -92,6 +102,44 @@ class Component {
         this.hostElement.insertAdjacentElement(insertAtStart ? 'afterbegin' : 'beforeend', this.element);
     }
 }
+class ProjectItem extends Component {
+    constructor(hostId, project) {
+        super('single-project', hostId, false, project.id);
+        this.project = project;
+        this.configure();
+        this.renderContent();
+    }
+    get persons() {
+        if (this.project.people === 1) {
+            return '1 person';
+        }
+        else {
+            return `${this.project.people} persons`;
+        }
+    }
+    dragStartHandler(event) {
+        event.dataTransfer.setData('text/plain', this.project.id);
+        event.dataTransfer.effectAllowed = 'move';
+    }
+    dragEndHandler(event) {
+        console.log('DragEnd');
+    }
+    configure() {
+        this.element.addEventListener('dragstart', this.dragStartHandler);
+        this.element.addEventListener('dragend', this.dragEndHandler);
+    }
+    renderContent() {
+        this.element.querySelector('h2').textContent = this.project.title;
+        this.element.querySelector('h3').textContent = this.persons + ' assigned';
+        this.element.querySelector('p').textContent = this.project.description;
+    }
+}
+__decorate([
+    AutoBind
+], ProjectItem.prototype, "dragStartHandler", null);
+__decorate([
+    AutoBind
+], ProjectItem.prototype, "dragEndHandler", null);
 class ProjectList extends Component {
     constructor(type) {
         super('project-list', 'app', false, `${type}-projects`);
@@ -100,7 +148,25 @@ class ProjectList extends Component {
         this.configure();
         this.renderContent();
     }
+    dragOverHandler(event) {
+        if (event.dataTransfer && event.dataTransfer.types[0] === 'text/plain') {
+            event.preventDefault();
+            const listEl = this.element.querySelector('ul');
+            listEl.classList.add('droppable');
+        }
+    }
+    dragLeaveHandler(_event) {
+        const listEl = this.element.querySelector('ul');
+        listEl.classList.remove('droppable');
+    }
+    dropHandler(event) {
+        const projectId = event.dataTransfer.getData('text/plain');
+        projectState.moveProject(projectId, this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Finished);
+    }
     configure() {
+        this.element.addEventListener('dragover', this.dragOverHandler);
+        this.element.addEventListener('dragleave', this.dragLeaveHandler);
+        this.element.addEventListener('drop', this.dropHandler);
         projectState.addListener((projects) => {
             const relevantProjects = projects.filter(prj => {
                 if (this.type === 'active') {
@@ -121,12 +187,19 @@ class ProjectList extends Component {
         const listEl = document.getElementById(`${this.type}-projects-list`);
         listEl.innerHTML = '';
         for (const prjItem of this.assignedProjects) {
-            const listItem = document.createElement('li');
-            listItem.textContent = prjItem.title;
-            listEl === null || listEl === void 0 ? void 0 : listEl.appendChild(listItem);
+            new ProjectItem(this.element.querySelector('ul').id, prjItem);
         }
     }
 }
+__decorate([
+    AutoBind
+], ProjectList.prototype, "dragOverHandler", null);
+__decorate([
+    AutoBind
+], ProjectList.prototype, "dragLeaveHandler", null);
+__decorate([
+    AutoBind
+], ProjectList.prototype, "dropHandler", null);
 class ProjectInput extends Component {
     constructor() {
         super('project-input', 'app', true, "user-input");
