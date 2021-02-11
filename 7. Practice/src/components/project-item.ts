@@ -1,4 +1,8 @@
-namespace App {
+import { AutoBind } from '../decorators/autobind.js';
+import { Draggable } from '../models/drag-drop.js';
+import { Project } from '../models/project.js';
+import { Component } from './base-components.js';
+
 	// ProjectItem class
 	export class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements Draggable{
 		private project: Project;
@@ -41,4 +45,3 @@ namespace App {
 			this.element.querySelector('p')!.textContent = this.project.description;
 		}
 	}
-}

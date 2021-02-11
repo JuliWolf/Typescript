@@ -1,4 +1,3 @@
-namespace App {
 	// autobind decorator
 	export function AutoBind(_target: any, _methodName: string, descriptor: PropertyDescriptor) {
 		const originalMethod = descriptor.value;
@@ -11,4 +10,3 @@ namespace App {
 		}
 		return adjDescriptor;
 	}
-}

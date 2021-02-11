@@ -1,4 +1,8 @@
-namespace App {
+import { AutoBind } from "../decorators/autobind.js";
+import { projectState } from "../state/project-state.js";
+import { Validatable, validate } from "../util/validation.js";
+import { Component } from "./base-components.js";
+
 	// ProjectInput Class
 	export class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
 		titleInputElement: HTMLInputElement;
@@ -74,4 +78,3 @@ namespace App {
 			}
 		}
 	}
-}
