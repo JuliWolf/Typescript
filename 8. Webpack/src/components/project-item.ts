@@ -30,7 +30,7 @@ import { Component } from './base-components';
 		}
 
 		@AutoBind
-		dragEndHandler(event: DragEvent) {
+		dragEndHandler(_event: DragEvent) {
 			console.log('DragEnd')
 		}
 
